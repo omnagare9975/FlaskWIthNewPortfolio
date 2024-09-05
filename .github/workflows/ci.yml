@@ -30,16 +30,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Run unit tests (optional)
-     
+      # Optional: Run unit tests (if you have test cases)
+      - name: Run Unit Tests
+        run: |
+          pytest || echo "No tests available"
+        continue-on-error: true  # Continue even if no tests or tests fail
 
       # Run SonarQube analysis
       - name: SonarQube Scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Make sure SONAR_TOKEN is added to GitHub secrets
         run: |
           sonar-scanner \
-            -Dsonar.projectKey=omnagare9975\
-            -Dsonar.organization=Om Nagare (if using SonarCloud) \
+            -Dsonar.projectKey=omnagare9975\  # Ensure the project key matches the one in SonarQube
+            -Dsonar.organization=omnagare9975  # For SonarCloud, use your organization ID
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-
-  
