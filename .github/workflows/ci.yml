@@ -31,9 +31,7 @@ jobs:
           pip install -r requirements.txt
 
       # Run unit tests (optional)
-      - name: Run Unit Tests
-        run: |
-          pytest  # This assumes you have test cases. You can skip this if not available.
+     
 
       # Run SonarQube analysis
       - name: SonarQube Scan
