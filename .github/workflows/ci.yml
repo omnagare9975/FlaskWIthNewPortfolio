@@ -29,5 +29,5 @@ jobs:
               run: docker run -d -p 8000:3000 omnagare/flask-application:v1
 
             - name: Push To the Docker Hub
-              run: docker push omnagare/flask-application:latest
+              run: docker push omnagare/flask-application:v1
               
