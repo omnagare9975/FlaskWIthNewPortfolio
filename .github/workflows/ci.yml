@@ -1,33 +1,47 @@
-#this 
-name: run dockerfile
+name: Build and Analyze with SonarQube
 
 on:
-    push:
-        branches:
-            - main
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-    build-and-push:
-        runs-on: ubuntu-latest
+  sonar:
+    name: SonarQube Scan for Flask App
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Check Out Your Repo
-              uses: actions/checkout@v3
+    steps:
+      # Checkout the code from your repository
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-            - name: Set Up Docker
-              uses: docker/setup-buildx-action@v2
+      # Set up Python (since you're working with Flask, a Python framework)
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'  # Use the version your Flask app requires
 
-            - name: Docker Hub Login
-              run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      # Install project dependencies (if any are specified in requirements.txt)
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-            - name: Building The Docker Image
-              run: docker build -t omnagare/flask-application:v1 . 
+      # Run unit tests (optional)
+      - name: Run Unit Tests
+        run: |
+          pytest  # This assumes you have test cases. You can skip this if not available.
 
-           
+      # Run SonarQube analysis
+      - name: SonarQube Scan
+        run: |
+          sonar-scanner \
+            -Dsonar.projectKey=omnagare9975\
+            -Dsonar.organization=Om Nagare (if using SonarCloud) \
+            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
-            - name: Expoes The Application 
-              run: docker run -d -p 8000:3000 omnagare/flask-application:v1
-
-            - name: Push To the Docker Hub
-              run: docker push omnagare/flask-application:v1
-              
+  
