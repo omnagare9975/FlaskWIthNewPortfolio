@@ -30,19 +30,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Optional: Run unit tests (if you have test cases)
-      - name: Run Unit Tests
+      # Install SonarScanner
+      - name: Install SonarScanner
         run: |
-          pytest || echo "No tests available"
-        continue-on-error: true  # Continue even if no tests or tests fail
+          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
+          unzip sonar-scanner.zip
+          export PATH="$PATH:$(pwd)/sonar-scanner-4.8.0.2856-linux/bin"
 
       # Run SonarQube analysis
       - name: SonarQube Scan
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Make sure SONAR_TOKEN is added to GitHub secrets
         run: |
           sonar-scanner \
-            -Dsonar.projectKey=omnagare9975\  # Ensure the project key matches the one in SonarQube
-            -Dsonar.organization=omnagare9975  # For SonarCloud, use your organization ID
+            -Dsonar.projectKey=omnagare9975 \
+            -Dsonar.organization=omnagare9975 \
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
