@@ -21,7 +21,12 @@ jobs:
               run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
             - name: Building The Docker Image
-              run: docker build -t omnagare/flask-application:latest . 
+              run: docker build -t omnagare/flask-application:v1 . 
+
+           
+
+            - name: Expoes The Application 
+              run: docker run -d -p 8000:3000 omnagare/flask-application:v1
 
             - name: Push To the Docker Hub
               run: docker push omnagare/flask-application:latest
