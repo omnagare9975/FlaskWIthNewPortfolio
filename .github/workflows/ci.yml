@@ -1,0 +1,27 @@
+name: run dockerfile
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    build-and-push:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Check Out Your Repo
+              uses: actions/checkout@v3
+
+            - name: Set Up Docker
+              uses: docker/setup-buildx-action@v2
+
+            - name: Docker Hub Login
+              run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+            - name: Building The Docker Image
+              run: docker build -t omnagare/flask-application:latest . 
+
+            - name: Push To the Docker Hub
+              run: docker push omnagare/flask-application:latest
+              
