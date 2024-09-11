@@ -3,7 +3,8 @@ pipeline{
     stages{
         stage("CheckOut"){
             steps{
-                git url "https://github.com/omnagare9975/FlaskWIthNewPortfolio.git", branch: "main"
+                git url: 'https://github.com/omnagare9975/FlaskWIthNewPortfolio.git', branch: 'main'
+
             }
         }
         stage("Building"){
